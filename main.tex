@@ -1,0 +1,60 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper, top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{esint}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{mathabx}
+\usepackage[linesnumbered , ruled , vlined]{algorithm2e}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{floatrow}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{listings}
+\usepackage[hypcap=false]{caption}
+\usepackage{hyperref}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{200050107, 200050130, 200050154, 200050157}
+\rhead{CS310}
+\cfoot{\thepage}
+
+\newcommand{\B}[1]{\textbf{#1}}
+\newcommand{\I}[1]{\textit{#1}}
+
+\title{\textbf{CS337 Course Project \\ Face Recognition}}
+\author{Pranjal Kushwaha, Shashwat Garg, Vedang Asgaonkar, Virendra Kabra}
+\date{Autumn 2022}
+
+\begin{document}
+\begin{sloppypar}       % for overfull, etc.
+
+    \maketitle
+    \tableofcontents
+
+    \newpage
+
+    \section{Dataset}
+    We use the Labelled Faces in Wild (LFW) dataset. It has been taken from \href{https://www.kaggle.com/datasets/jessicali9530/lfw-dataset}{Kaggle}. There is an uneven distribution of images, with only 10 people having at least 53 images. Thus, we train the model to classify these 10 people, with our dataset containing 53 images for each. The test-train split is 80-20, and the train set is further split to create the validation set.
+
+    \section{Model Architecture}
+
+    We use a Convolutional Neural Network (CNN), that is inspired from the 2015 FaceNet paper \cite{facenet}.
+
+    \bibliographystyle{abbrv}
+    \bibliography{biblio}
+
+\end{sloppypar}
+\end{document}
