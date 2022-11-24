@@ -56,7 +56,7 @@
         \end{itemize}
     
 
-    \section{Model Architecture}
+        \section{Model Architecture}
 
         We use a Convolutional Neural Network (CNN) to create a multi-class image classifier. The network is inspired from FaceNet \cite{facenet}.
 
@@ -108,20 +108,45 @@
             \end{table}
         \end{center}
 
+        Notation for kernels: Size $\times$ Number of channels, Stride.
+
         \begin{itemize}
-            \item Convolutions: To learn hierarchical representations of the input data, we use several convolutional layers.
+            \item \B{Convolutions}: To learn hierarchical representations of the input data, we use several convolutional layers. Given input of size $(N, C_{in}, H_{in}, W_{in})$ and output of size $(N, C_{out}, H_{out}, W_{out})$, the output value is
+                $$ out(N_i,C_{out_j}) = \sum_{k=0}^{C_{in}-1} W(C_{out_j},k) \ast input(N_i,k) + b(C_{out_j}) $$
+            where $\ast$ denotes cross-correlation (flipped convolution), $N$ is the batch size, $C$'s are the number of channels, $H$ and $W$ are heights and widths. The parameters $W$ and $b$ are trainable. Cross-correlation is used to avoid flipping the filters. Since the weights are \I{learnt}, this is equivalent to using convolution.
             \item Batch Normalization: Adding these layers lead to faster convergence.
-            \item ReLU: These are added for non-linearity, which is necessary for the universal approximation theorem to hold.
-            \item Max Pooling: This helps make the representation become approximately invariant to small translations of the input.
-            \item Dropout: This acts as a regularizer. We use dropout with $p=0.2$ after the maxpool layers \cite{dropout_analysis}, and with $p=0.5$ after the fully-connected layers \cite{dropout_hinton}.
-            \item Optimizer: Stochastic Gradient Descent (SGD) with a learning rate of $10^{-3}$ and weight decay of $10^{-3}$.
+            \item ReLU: These are added for non-linearity, which is necessary for the universal approximation theorem to hold. The operation $ReLU(x)=\max(0,x)$ is applied element-wise.
+            \item Max Pooling: Pooling involving down-sampling the feature maps by summarizing the features. In particular, max pooling outputs the maximum of input values over the specified region. This also helps make the representation become approximately invariant to small translations of the input.
+            \item Dropout: It refers to dropping out random (non-output) neurons in the network, to prevent units from co-adapting too much. This prevents overfitting, thus acting as a regularizer. We use dropout with $p=0.2$ after the maxpool layers \cite{dropout_analysis}, and with $p=0.5$ after the fully-connected layers \cite{dropout_hinton}.
+            \item Optimizer: Stochastic Gradient Descent (SGD) is used
+                \begin{itemize}
+                    \item Learning Rate: $10^{-3}$ is used. Convergence is achieved in less than 50 epochs. In comparison, smaller learning rates (order $10^{-4}$) require many more epochs.
+                    \item Weight Decay: $10^{-3}$ is used. For SGD, this is equivalent to using $L_2$ regularization.
+                \end{itemize}
             \item Loss: We use two losses in addition:
                 \begin{itemize}
                     \item Cross Entropy Loss: This is the standard loss for multi-class classification.
-                    \item Triplet Loss: This is introduced in \cite{facenet}. We view the neural network as having an encoder and a decoder. The neural network until its penultimate layer is the encoder, which produces a latent representation for each image. The final layer acts as a decoder on this. This loss encourages clustering in the latent representation.
-                    $$L(a,p,n) = \sum_i^N \big[\norm{f(x_i^a)-f(x_i^p)}_2^2-\norm{f(x_i^a)-f(x_i^n)}_2^2+\alpha\big]_+$$ where $a$ is the anchor, $p$ is a positive sample (having same class as $a$), $n$ is a negative sample, and $\alpha$ is the margin (1 is used).
+                    \item Triplet Loss: This loss encourages clustering in the latent representation. It is described in a later section.
                 \end{itemize}
         \end{itemize}
+
+    
+    \section{Dataset Modification Handling}
+
+    As per the usecase, this model might require frequent updation of the faces/people in the dataset. An example can be updating the employee list in the company, where this system is used for attendance.
+
+    For this reason, we have designed our model as an encoder-decoder system. The majority of parameters are in the encoder model and only the final layer is present as a decoder. The idea is that we only need to retrain only the final layer whenever the dataset gets updated.
+
+    This kind of transfer learning results in much quicker learning everytime the dataset is updated. We also see similar validation accuracy levels reached after retraining, upon increasing the dataset's size.
+
+    \section{Comparison with VGG16}
+
+    We also trained a VGG16 model for face recognition using the dataset and limited resources we had. The VGG system was a much deeper Neural Network with several convolution layers and was slow to train. After 500 epochs, we saw the VGG system reach $70\%$ test accuracy. It was improving at a very slow pace.
+    
+    On the other hand, our model achieves a much better test accuracy of near $90\%$ within 30 epochs with a much smaller training time.
+
+    We conclude that our model outperforms the VGG16 model in case of limited resources and time.
+
 
     \section{Analysis}
 
@@ -202,6 +227,8 @@
     \begin{center}
         \ffigbox [ 0.6 \textwidth ]{ \caption{l2 regularizer} } { \includegraphics [ width =0.6 \textwidth ] {l2.png}}   
     \end{center}
+
+
     \bibliographystyle{abbrv}
     \bibliography{biblio}
 
