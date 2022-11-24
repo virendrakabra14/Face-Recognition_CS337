@@ -108,13 +108,21 @@
             \end{table}
         \end{center}
 
+        Notation for kernels: Size $\times$ Number of channels, Stride.
+
         \begin{itemize}
-            \item Convolutions: To learn hierarchical representations of the input data, we use several convolutional layers.
+            \item \B{Convolutions}: To learn hierarchical representations of the input data, we use several convolutional layers. Given input of size $(N, C_{in}, H_{in}, W_{in})$ and output of size $(N, C_{out}, H_{out}, W_{out})$, the output value is
+                $$ out(N_i,C_{out_j}) = \sum_{k=0}^{C_{in}-1} W(C_{out_j},k) \ast input(N_i,k) + b(C_{out_j}) $$
+            where $\ast$ denotes cross-correlation (flipped convolution), $N$ is the batch size, $C$'s are the number of channels, $H$ and $W$ are heights and widths. The parameters $W$ and $b$ are trainable. Cross-correlation is used to avoid flipping the filters. Since the weights are \I{learnt}, this is equivalent to using convolution.
             \item Batch Normalization: Adding these layers lead to faster convergence.
-            \item ReLU: These are added for non-linearity, which is necessary for the universal approximation theorem to hold.
-            \item Max Pooling: This helps make the representation become approximately invariant to small translations of the input.
-            \item Dropout: This acts as a regularizer. We use dropout with $p=0.2$ after the maxpool layers \cite{dropout_analysis}, and with $p=0.5$ after the fully-connected layers \cite{dropout_hinton}.
-            \item Optimizer: Stochastic Gradient Descent (SGD) with a learning rate of $10^{-3}$ and weight decay of $10^{-3}$.
+            \item ReLU: These are added for non-linearity, which is necessary for the universal approximation theorem to hold. The operation $ReLU(x)=\max(0,x)$ is applied element-wise.
+            \item Max Pooling: Pooling involving down-sampling the feature maps by summarizing the features. In particular, max pooling outputs the maximum of input values over the specified region. This also helps make the representation become approximately invariant to small translations of the input.
+            \item Dropout: It refers to dropping out random (non-output) neurons in the network, to prevent units from co-adapting too much. This prevents overfitting, thus acting as a regularizer. We use dropout with $p=0.2$ after the maxpool layers \cite{dropout_analysis}, and with $p=0.5$ after the fully-connected layers \cite{dropout_hinton}.
+            \item Optimizer: Stochastic Gradient Descent (SGD) is used
+                \begin{itemize}
+                    \item Learning Rate: $10^{-3}$ is used. Convergence is achieved in less than 50 epochs. In comparison, smaller learning rates (order $10^{-4}$) require many more epochs.
+                    \item Weight Decay: $10^{-3}$ is used. For SGD, this is equivalent to using $L_2$ regularization.
+                \end{itemize}
             \item Loss: We use two losses in addition:
                 \begin{itemize}
                     \item Cross Entropy Loss: This is the standard loss for multi-class classification.
