@@ -130,6 +130,24 @@
                 \end{itemize}
         \end{itemize}
 
+    
+    \section{Dataset Modification Handling}
+
+    As per the usecase, this model might require frequent updation of the faces/people in the dataset. An example can be updating the employee list in the company, where this system is used for attendance.
+
+    For this reason, we have designed our model as an encoder-decoder system. The majority of parameters are in the encoder model and only the final layer is present as a decoder. The idea is that we only need to retrain only the final layer whenever the dataset gets updated.
+
+    This kind of transfer learning results in much quicker learning everytime the dataset is updated. We also see similar validation accuracy levels reached after retraining, upon increasing the dataset's size.
+
+    \section{Comparison with VGG16}
+
+    We also trained a VGG16 model for face recognition using the dataset and limited resources we had. The VGG system was a much deeper Neural Network with several convolution layers and was slow to train. After 500 epochs, we saw the VGG system reach $70\%$ test accuracy. It was improving at a very slow pace.
+    
+    On the other hand, our model achieves a much better test accuracy of near $90\%$ within 30 epochs with a much smaller training time.
+
+    We conclude that our model outperforms the VGG16 model in case of limited resources and time.
+
+
     \section{Analysis}
 
     \begin{itemize}
