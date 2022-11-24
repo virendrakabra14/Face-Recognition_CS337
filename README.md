@@ -18,3 +18,8 @@ This is followed by an instance of the VGG model, which we trained for 500 epoch
 Next, we have the adversarial attacks on our model. Here, a generator adds noise to the images and the noisy images are fed into our model. We test for both l1 and l2 noises, the results of which can be found in the report.
 
 Finally we have a Demo section where we display some images from our test set for the original trained model. You can run with this section after importing all the packages and loading the model.
+
+Trained models:
+* [CNN on 10 faces](https://drive.google.com/file/d/1lYIf0Zt6V2ejj5jRbfDqk6jrnmmgCCoJ/view?usp=sharing)
+* [Transfer learning to 15 faces](https://drive.google.com/file/d/1DsZZwrCDvaXleEMmCQ9Sj5UJB4iWlUdR/view?usp=share_link)
+* [VGG16](https://drive.google.com/file/d/1hY2y229YCSMc9cBoybW2vyLvrxD47frL/view?usp=sharing)
