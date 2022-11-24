@@ -33,6 +33,7 @@
 
 \newcommand{\B}[1]{\textbf{#1}}
 \newcommand{\I}[1]{\textit{#1}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
 
 \title{\textbf{CS337 Course Project \\ Face Recognition}}
 \author{Pranjal Kushwaha, Shashwat Garg, Vedang Asgaonkar, Virendra Kabra}
@@ -114,6 +115,12 @@
             \item Max Pooling: This helps make the representation become approximately invariant to small translations of the input.
             \item Dropout: This acts as a regularizer. We use dropout with $p=0.2$ after the maxpool layers \cite{dropout_analysis}, and with $p=0.5$ after the fully-connected layers \cite{dropout_hinton}.
             \item Optimizer: Stochastic Gradient Descent (SGD) with a learning rate of $10^{-3}$ and weight decay of $10^{-3}$.
+            \item Loss: We use two losses in addition:
+                \begin{itemize}
+                    \item Cross Entropy Loss: This is the standard loss for multi-class classification.
+                    \item Triplet Loss: This is introduced in \cite{facenet}. We view the neural network as having an encoder and a decoder. The neural network until its penultimate layer is the encoder, which produces a latent representation for each image. The final layer acts as a decoder on this. This loss encourages clustering in the latent representation.
+                    $$L(a,p,n) = \sum_i^N \big[\norm{f(x_i^a)-f(x_i^p)}_2^2-\norm{f(x_i^a)-f(x_i^n)}_2^2+\alpha\big]_+$$ where $a$ is the anchor, $p$ is a positive sample (having same class as $a$), $n$ is a negative sample, and $\alpha$ is the margin (1 is used).
+                \end{itemize}
         \end{itemize}
 
     \section{Analysis}
